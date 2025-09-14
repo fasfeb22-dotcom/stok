@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan SO - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title"> Laporan Hasil SO</h1>
+
+      <div class="field">
+        <label class="label">Pilih Tanggal</label>
+        <input class="input" type="date" id="tanggalLaporan" onchange="tampilkanLaporan()">
+      </div>
+
+      <div id="laporanContainer"></div>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>

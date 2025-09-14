@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Data - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">️ Edit / Tambah Item</h1>
+
+      <div class="field">
+        <label class="label">Pilih Rak</label>
+        <div class="control">
+          <div class="select is-link">
+            <select id="rakEditSelect" onchange="loadEditBarang()">
+              <option value="">-- Pilih Rak --</option>
+              <option value="Rak A">Rak A</option>
+              <option value="Rak B">Rak B</option>
+               <option value="Rak C">Rak C</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <form id="editForm" class="is-hidden" onsubmit="simpanEdit(event)">
+        <table class="table is-striped is-fullwidth">
+          <thead>
+            <tr>
+              <th>Barang</th>
+              <th>Stok Sistem</th>
+              <th>Edit Qty Fisik</th>
+            </tr>
+          </thead>
+          <tbody id="editBarangTable"></tbody>
+        </table>
+        <button type="submit" class="button is-warning mt-3"> Simpan Perubahan</button>
+      </form>
+
+      <hr>
+      <h2 class="subtitle">➕ Tambah Item Baru</h2>
+      <div class="field">
+        <label class="label">Nama Barang</label>
+        <input class="input" type="text" id="newItemName" placeholder="Nama barang">
+      </div>
+      <div class="field">
+        <label class="label">Stok Sistem</label>
+        <input class="input" type="number" id="newItemStok" placeholder="Stok sistem">
+      </div>
+      <div class="field">
+        <label class="label">Qty Fisik</label>
+        <input class="input" type="number" id="newItemFisik" placeholder="Qty fisik">
+      </div>
+      <button class="button is-success" onclick="tambahItem()">Tambah Item</button>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>

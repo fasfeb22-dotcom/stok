@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Input Rak - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body { background: linear-gradient(135deg,#f8f9fa,#e3f2fd); min-height:100vh; }
+    .container { max-width: 900px; margin-top: 30px; }
+    .box { border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 30px; }
+    h1.title { color:#1976d2; font-weight:700; text-align:center; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="box">
+        <h1 class="title"> Input Rak & Kuantiti</h1>
+
+        <div class="field">
+          <label class="label">Pilih Rak</label>
+          <div class="control">
+            <div class="select is-link">
+              <select id="rakSelect" onchange="loadBarang()">
+                <option value="">-- Pilih Rak --</option>
+                <option value="Rak A">Rak A</option>
+                <option value="Rak B">Rak B</option>
+                  <option value="Rak C">Rak C</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <form id="barangForm" class="is-hidden" onsubmit="simpanData(event)">
+          <table class="table is-striped is-fullwidth">
+            <thead>
+              <tr>
+                <th>Barang</th>
+                <th>Stok Sistem</th>
+                <th>Qty Fisik</th>
+              </tr>
+            </thead>
+            <tbody id="barangTable"></tbody>
+          </table>
+          <button type="submit" class="button is-success mt-3"> Simpan Data</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>

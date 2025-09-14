@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Adjust SO - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Adjust Hasil SO</h1>
+
+      <div class="field">
+        <label class="label">Pilih Tanggal SO</label>
+        <input class="input" type="date" id="tanggalAdjust">
+      </div>
+
+      <button class="button is-danger mb-3" onclick="adjustSO()">Adjust Data</button>
+
+      <div id="adjustResult" class="notification is-success is-hidden">
+        ✅ Data berhasil disimpan. <br>
+        <a id="hasilLink" href="#" target="_blank"> Lihat Cetakan Hasil SO</a>
+      </div>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>

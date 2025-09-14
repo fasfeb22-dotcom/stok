@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Utility - Tambah & Hapus Rak</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body { background: linear-gradient(135deg,#f8f9fa,#e3f2fd); min-height:100vh; }
+    .container { max-width: 700px; margin-top: 40px; }
+    .box { border-radius: 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.1); padding: 25px; }
+    ul li { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="box">
+        <h1 class="title">⚙️ Utility</h1>
+        <h2 class="subtitle">Tambah Rak Baru</h2>
+
+        <form id="formTambahRak" onsubmit="tambahRak(event)">
+          <div class="field">
+            <label class="label">Nama Rak</label>
+            <div class="control">
+              <input type="text" id="namaRakBaru" class="input" placeholder="Contoh: Rak D">
+            </div>
+          </div>
+
+          <div class="field">
+            <button class="button is-primary" type="submit">➕ Tambah Rak</button>
+            <a class="button is-light" href="index.html">⬅️ Kembali</a>
+          </div>
+        </form>
+
+        <hr>
+
+        <h2 class="subtitle">Daftar Rak Saat Ini</h2>
+        <ul id="daftarRak" class="content"></ul>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+  <script>
+    function tampilkanRak() {
+      const daftar = document.getElementById("daftarRak");
+      daftar.innerHTML = "";
+      Object.keys(stokAwal).forEach(rak => {
+        daftar.innerHTML += `
+          <li>
+            📂 ${rak}
+            <button class="button is-small is-danger" onclick="hapusRak('${rak}')">🗑 Hapus</button>
+          </li>`;
+      });
+    }
+
+    function tambahRak(e) {
+      e.preventDefault();
+      const namaRak = document.getElementById("namaRakBaru").value.trim();
+      if (!namaRak) { alert("Nama rak tidak boleh kosong!"); return; }
+      if (stokAwal[namaRak]) { alert("Rak sudah ada!"); return; }
+
+      stokAwal[namaRak] = [];
+      saveStokAwal();
+      renderRakOptions();
+      tampilkanRak();
+
+      document.getElementById("namaRakBaru").value = "";
+      alert("Rak baru berhasil ditambahkan!");
+    }
+
+    function hapusRak(rak) {
+      if (!confirm(`Apakah yakin ingin menghapus ${rak}? Semua data di rak ini juga akan hilang.`)) return;
+
+      delete stokAwal[rak];
+      localStorage.removeItem(rak); // hapus data fisik juga
+      saveStokAwal();
+      renderRakOptions();
+      tampilkanRak();
+      alert("Rak berhasil dihapus!");
+    }
+
+    tampilkanRak();
+  </script>
+</body>
+</html>
