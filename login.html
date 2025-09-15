@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>🔐 Login</h1>
+    <form id="loginForm">
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input class="input" type="password" id="password" placeholder="Masukkan password" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" id="rememberMe"> Ingat Saya
+        </label>
+      </div>
+
+      <div class="field">
+        <button class="button is-link is-fullwidth">Login</button>
+      </div>
+    </form>
+    <p id="errorMsg" class="has-text-danger has-text-centered"></p>
+  </div>
+
+  <script>
+    const PASSWORD = "23083017"; // password rahasia Anda
+
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const pass = document.getElementById("password").value;
+      const remember = document.getElementById("rememberMe").checked;
+      const errorMsg = document.getElementById("errorMsg");
+
+      if(pass === PASSWORD){
+        // Simpan status login
+        sessionStorage.setItem("so_logged_in", "1");
+        if(remember){
+          localStorage.setItem("so_logged_in", "1");
+        } else {
+          localStorage.removeItem("so_logged_in");
+        }
+
+        // Ambil halaman tujuan sebelum login
+        const target = sessionStorage.getItem("so_after_login") || "index.html";
+        sessionStorage.removeItem("so_after_login");
+
+        // Redirect
+        window.location.href = target;
+      } else {
+        errorMsg.textContent = "❌ Password salah!";
+      }
+    });
+  </script>
+</body>
+</html>
