@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Login - Stock Opname</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg,#f8f9fa,#e3f2fd);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .card {
+      width:100%;
+      max-width:420px;
+      border-radius:12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card box">
+    <h1 class="title is-4">🔐 Login</h1>
+    <p class="subtitle is-6">Masukkan password untuk mengakses aplikasi.</p>
+
+    <div class="field">
+      <label class="label">Password</label>
+      <div class="control">
+        <input id="password" class="input" type="password" autocomplete="current-password" placeholder="Masukkan password">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="checkbox">
+        <input type="checkbox" id="remember"> Ingat Saya
+      </label>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" onclick="doLogin()">Masuk</button>
+      </div>
+      <div class="control">
+        <a class="button is-light" href="index.html">Batal</a>
+      </div>
+    </div>
+
+    <p id="msg" class="has-text-danger mt-3" style="display:none"></p>
+
+    <hr>
+    <p class="is-size-7 has-text-grey">Catatan: proteksi ini berbasis client-side. Untuk keamanan lebih kuat gunakan autentikasi server-side.</p>
+  </div>
+
+  <script>
+  // ======= CONFIG =======
+  // Hash SHA-256 dari password "23083017"
+  const PASSWORD_HASH = "cda28da60738ed732940aa5025cc8277f7085904c4b26b8cc1500387c5f11672";
+  // ======================
+
+  async function sha256Hex(message) {
+    const enc = new TextEncoder();
+    const data = enc.encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function doLogin() {
+    const pw = document.getElementById('password').value || '';
+    const remember = document.getElementById('remember').checked;
+    const msgEl = document.getElementById('msg');
+    msgEl.style.display = 'none';
+
+    if (!pw) {
+      msgEl.textContent = 'Silakan isi password.';
+      msgEl.style.display = 'block';
+      return;
+    }
+
+    const h = await sha256Hex(pw);
+    if (h === PASSWORD_HASH) {
+      if (remember) {
+        localStorage.setItem('so_logged_in', '1');
+      } else {
+        sessionStorage.setItem('so_logged_in', '1');
+      }
+      const redirect = sessionStorage.getItem('so_after_login') || 'index.html';
+      sessionStorage.removeItem('so_after_login');
+      window.location.href = redirect;
+    } else {
+      msgEl.textContent = 'Password salah.';
+      msgEl.style.display = 'block';
+    }
+  }
+
+  // Auto-redirect kalau sudah login
+  if (localStorage.getItem('so_logged_in') === '1' || sessionStorage.getItem('so_logged_in') === '1') {
+    window.location.href = 'index.html';
+  }
+  </script>
+</body>
+</html>
