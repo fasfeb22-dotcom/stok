@@ -6,45 +6,18 @@
   <title>Cetak Selisih - Stock Opname</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <style>
-    /* Navbar burger */
-    .navbar-burger {
-      cursor: pointer;
+    /* Buat tabel bisa scroll di mobile */
+    .table-container {
+      overflow-x: auto;
     }
-
-    /* Tombol full width di mobile */
+    /* Buat tombol full width di mobile */
     @media (max-width: 768px) {
       .button.is-primary {
         width: 100%;
-        margin-bottom: 0.5em;
       }
       .checkbox {
         display: block;
         margin-bottom: 0.5em;
-      }
-    }
-
-    /* Tabel responsif mobile: ubah ke card style */
-    @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead tr {
-        display: none;
-      }
-      tr {
-        margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        padding: 0.5em;
-        border-radius: 5px;
-      }
-      td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5em;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: bold;
       }
     }
   </style>
@@ -80,7 +53,7 @@
 
       <!-- Tombol -->
       <div class="field">
-        <button class="button is-primary" onclick="previewSelisih()">Preview Selisih</button>
+        <button class="button is-primary mb-3" onclick="previewSelisih()">Preview Selisih</button>
       </div>
 
       <!-- Tabel Hasil -->
@@ -130,33 +103,6 @@
             <input type="checkbox" value="${rak}" class="rakCheck"> ${rak}
           </label>
         `;
-      });
-    }
-
-    // Fungsi preview selisih (contoh)
-    function previewSelisih() {
-      const tableBody = document.querySelector("#selisihTable tbody");
-      tableBody.innerHTML = ""; // Reset tabel
-
-      const checkedRaks = Array.from(document.querySelectorAll(".rakCheck:checked")).map(cb => cb.value);
-      if (checkedRaks.length === 0) {
-        alert("Pilih minimal 1 rak!");
-        return;
-      }
-
-      checkedRaks.forEach(rak => {
-        const barangList = stokAwal[rak] || [];
-        barangList.forEach(item => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td data-label="Rak">${rak}</td>
-            <td data-label="Barang">${item.nama}</td>
-            <td data-label="Stok Sistem">${item.stok}</td>
-            <td data-label="Qty Fisik">${item.fisik}</td>
-            <td data-label="Selisih">${item.fisik - item.stok}</td>
-          `;
-          tableBody.appendChild(tr);
-        });
       });
     }
   </script>
