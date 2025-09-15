@@ -1,151 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laporan SO Interaktif - Stock Opname</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-<style>
-  body { background: #f5f5f5; min-height: 100vh; }
-  .container { max-width: 900px; margin-top: 30px; }
-  h1.title { font-size: 1.5rem; margin-bottom: 1rem; text-align: center; }
-  .table-container { overflow-x: auto; margin-top: 1rem; }
-  table { min-width: 500px; }
-  @media (max-width: 768px) {
-    .button { width: 100%; margin-bottom: 0.5em; }
-    .select select, .input { width: 100%; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan SO - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body { 
+      background: #f5f5f5; 
+      min-height: 100vh; 
+    }
+    .container { 
+      max-width: 900px; 
+      margin-top: 30px; 
+    }
+    h1.title { 
+      font-size: 1.5rem; 
+      margin-bottom: 1rem; 
+      text-align: center; 
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+    table {
+      min-width: 500px; /* Supaya tabel tidak pecah */
+    }
+  </style>
 </head>
 <body>
-
-<nav class="navbar is-link">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="index.html">📦 Stock Opname</a>
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div id="navMenu" class="navbar-menu"></div>
-</nav>
-
-<section class="section">
-  <div class="container">
-    <h1 class="title is-size-5-mobile">Laporan Hasil SO</h1>
-
-    <div class="field">
-      <label class="label">Pilih Tanggal</label>
-      <input class="input" type="date" id="tanggalLaporan" onchange="tampilkanLaporan()">
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
+    <div id="navMenu" class="navbar-menu"></div>
+  </nav>
 
-    <div class="field">
-      <label class="label">Filter Rak</label>
-      <div class="control">
-        <div class="select is-link">
-          <select id="filterRak" onchange="tampilkanLaporan()">
-            <option value="">Semua Rak</option>
-            <option value="Rak A">Rak A</option>
-            <option value="Rak B">Rak B</option>
-            <option value="Rak C">Rak C</option>
-          </select>
-        </div>
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-size-5-mobile">Laporan Hasil SO</h1>
+
+      <div class="field">
+        <label class="label">Pilih Tanggal</label>
+        <input class="input" type="date" id="tanggalLaporan" onchange="tampilkanLaporan()">
       </div>
+
+      <div id="laporanContainer" class="table-container"></div>
     </div>
+  </section>
 
-    <div id="laporanContainer" class="table-container"></div>
-
-    <div class="buttons mt-3">
-      <button class="button is-info" onclick="downloadPDF()">Download PDF</button>
-      <button class="button is-success" onclick="downloadExcel()">Download Excel</button>
-    </div>
-  </div>
-</section>
-
-<!-- Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-<script>
-  // Navbar burger
-  document.addEventListener('DOMContentLoaded', () => {
-    const burger = document.querySelector('.navbar-burger');
-    const menu = document.getElementById('navMenu');
-    burger.addEventListener('click', () => {
-      burger.classList.toggle('is-active');
-      menu.classList.toggle('is-active');
+  <script src="script.js"></script>
+  <script>
+    // Navbar burger untuk mobile
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const menu = document.getElementById('navMenu');
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
     });
-  });
 
-  function tampilkanLaporan() {
-    const tanggal = document.getElementById('tanggalLaporan').value;
-    const filterRak = document.getElementById('filterRak').value;
-    const container = document.getElementById('laporanContainer');
-    container.innerHTML = '';
+    // Contoh fungsi tampilkanLaporan()
+    function tampilkanLaporan() {
+      const tanggal = document.getElementById('tanggalLaporan').value;
+      const container = document.getElementById('laporanContainer');
+      container.innerHTML = ''; // Reset sebelumnya
 
-    if(!tanggal) return;
+      if(!tanggal) return;
 
-    // Ambil data dari localStorage (contoh)
-    const laporan = JSON.parse(localStorage.getItem('laporanSO_' + tanggal)) || [];
+      // Ambil data dari localStorage (contoh)
+      const laporan = JSON.parse(localStorage.getItem('laporanSO_' + tanggal)) || [];
 
-    const filtered = filterRak ? laporan.filter(item => item.rak === filterRak) : laporan;
+      if(laporan.length === 0) {
+        container.innerHTML = "<p class='has-text-centered has-text-danger'>❌ Tidak ada data untuk tanggal ini.</p>";
+        return;
+      }
 
-    if(filtered.length === 0) {
-      container.innerHTML = "<p class='has-text-centered has-text-danger'>❌ Tidak ada data untuk filter ini.</p>";
-      return;
+      let html = '<table class="table is-striped is-fullwidth"><thead><tr><th>Rak</th><th>Barang</th><th>Stok Sistem</th><th>Qty Fisik</th><th>Selisih</th></tr></thead><tbody>';
+      laporan.forEach(item => {
+        html += `<tr>
+          <td>${item.rak}</td>
+          <td>${item.nama}</td>
+          <td>${item.stok}</td>
+          <td>${item.fisik}</td>
+          <td>${item.fisik - item.stok}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+
+      container.innerHTML = html;
     }
-
-    let html = '<table class="table is-striped is-fullwidth"><thead><tr><th>Rak</th><th>Barang</th><th>Stok Sistem</th><th>Qty Fisik</th><th>Selisih</th></tr></thead><tbody>';
-    let totalSelisih = 0;
-
-    filtered.forEach(item => {
-      const selisih = item.fisik - item.stok;
-      totalSelisih += selisih;
-      html += `<tr>
-        <td>${item.rak}</td>
-        <td>${item.nama}</td>
-        <td>${item.stok}</td>
-        <td>${item.fisik}</td>
-        <td>${selisih}</td>
-      </tr>`;
-    });
-
-    html += `<tr style="font-weight:bold;"><td colspan="4" class="has-text-right">Total Selisih</td><td>${totalSelisih}</td></tr>`;
-    html += '</tbody></table>';
-
-    container.innerHTML = html;
-  }
-
-  // Download PDF
-  function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const container = document.getElementById('laporanContainer');
-    if(!container.innerHTML) return alert('Tidak ada data untuk dicetak.');
-
-    doc.html(container, {
-      callback: function(doc) {
-        doc.save('Laporan_SO.pdf');
-      },
-      x: 10,
-      y: 10,
-      html2canvas: { scale: 0.5 }
-    });
-  }
-
-  // Download Excel
-  function downloadExcel() {
-    const container = document.getElementById('laporanContainer');
-    if(!container.innerHTML) return alert('Tidak ada data untuk diunduh.');
-
-    const wb = XLSX.utils.book_new();
-    const table = container.querySelector('table');
-    const ws = XLSX.utils.table_to_sheet(table);
-    XLSX.utils.book_append_sheet(wb, ws, 'Laporan SO');
-    XLSX.writeFile(wb, 'Laporan_SO.xlsx');
-  }
-</script>
-
+  </script>
 </body>
 </html>
