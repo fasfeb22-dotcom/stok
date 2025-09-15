@@ -6,45 +6,42 @@
   <title>Input Rak - Stock Opname</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <style>
-    body { background: linear-gradient(135deg,#f8f9fa,#e3f2fd); min-height:100vh; }
-    .container { max-width: 900px; margin-top: 30px; }
-    .box { border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 30px; }
-    h1.title { color:#1976d2; font-weight:700; text-align:center; }
+    body { 
+      background: linear-gradient(135deg,#f8f9fa,#e3f2fd); 
+      min-height:100vh; 
+    }
+    .container { 
+      max-width: 900px; 
+      margin-top: 30px; 
+    }
+    .box { 
+      border-radius: 16px; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+      padding: 30px; 
+    }
+    h1.title { 
+      color:#1976d2; 
+      font-weight:700; 
+      text-align:center; 
+    }
 
     /* Tombol full width di mobile */
     @media (max-width: 768px) {
       .button.is-success {
         width: 100%;
+        margin-bottom: 0.5em;
       }
       .select select {
         width: 100%;
       }
     }
 
-    /* Tabel responsif mobile: ubah ke card style */
-    @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead tr {
-        display: none;
-      }
-      tr {
-        margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        padding: 0.5em;
-        border-radius: 8px;
-        background: #fff;
-      }
-      td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5em;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: bold;
-      }
+    /* Buat tabel scroll horizontal di mobile */
+    .table-container {
+      overflow-x: auto;
+    }
+    table {
+      min-width: 500px; /* Supaya tabel tetap rapi di mobile */
     }
   </style>
 </head>
@@ -84,16 +81,18 @@
 
         <!-- Form Barang -->
         <form id="barangForm" class="is-hidden" onsubmit="simpanData(event)">
-          <table class="table is-striped is-fullwidth">
-            <thead>
-              <tr>
-                <th>Barang</th>
-                <th>Stok Sistem</th>
-                <th>Qty Fisik</th>
-              </tr>
-            </thead>
-            <tbody id="barangTable"></tbody>
-          </table>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Barang</th>
+                  <th>Stok Sistem</th>
+                  <th>Qty Fisik</th>
+                </tr>
+              </thead>
+              <tbody id="barangTable"></tbody>
+            </table>
+          </div>
           <button type="submit" class="button is-success mt-3">Simpan Data</button>
         </form>
       </div>
