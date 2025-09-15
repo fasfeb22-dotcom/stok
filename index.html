@@ -1,12 +1,4 @@
-<script>
-  function checkAuth() {
-    if (sessionStorage.getItem('so_logged_in') === '1') return;
-    // Simpan halaman tujuan agar setelah login kembali ke sini
-    sessionStorage.setItem('so_after_login', location.pathname.split('/').pop() || 'index.html');
-    location.href = 'login.html';
-  }
-  checkAuth();
-</script>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
