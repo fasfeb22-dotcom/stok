@@ -1,5 +1,4 @@
 // ==================== DATA AWAL ====================
-// Ambil stokAwal dari localStorage atau set default
 let stokAwal = JSON.parse(localStorage.getItem("stokAwal")) || {
   "Rak A": [
     { nama: "KinderJoy", stok: 19 },
@@ -22,46 +21,28 @@ function saveStokAwal() {
   localStorage.setItem("stokAwal", JSON.stringify(stokAwal));
 }
 
-// Render ulang dropdown dan checklist rak
+// ==================== RENDER RAK ====================
 function renderRakOptions() {
   const rakOptions = Object.keys(stokAwal);
 
   const rakSelect = document.getElementById("rakSelect");
   const rakEditSelect = document.getElementById("rakEditSelect");
   const rakChecklist = document.getElementById("rakChecklist");
-  const rakChecklistEdit = document.getElementById("rakChecklistEdit");
 
   if (rakSelect) {
     rakSelect.innerHTML = `<option value="">-- Pilih Rak --</option>`;
-    rakOptions.forEach(r => {
-      rakSelect.innerHTML += `<option value="${r}">${r}</option>`;
-    });
+    rakOptions.forEach(r => rakSelect.innerHTML += `<option value="${r}">${r}</option>`);
   }
 
   if (rakEditSelect) {
     rakEditSelect.innerHTML = `<option value="">-- Pilih Rak --</option>`;
-    rakOptions.forEach(r => {
-      rakEditSelect.innerHTML += `<option value="${r}">${r}</option>`;
-    });
+    rakOptions.forEach(r => rakEditSelect.innerHTML += `<option value="${r}">${r}</option>`);
   }
 
   if (rakChecklist) {
     rakChecklist.innerHTML = "";
     rakOptions.forEach(r => {
-      rakChecklist.innerHTML += `
-        <label class="checkbox mr-3">
-          <input type="checkbox" class="rakCheck" value="${r}"> ${r}
-        </label>`;
-    });
-  }
-
-  if (rakChecklistEdit) {
-    rakChecklistEdit.innerHTML = "";
-    rakOptions.forEach(r => {
-      rakChecklistEdit.innerHTML += `
-        <label class="checkbox mr-3">
-          <input type="checkbox" class="rakEditCheck" value="${r}"> ${r}
-        </label>`;
+      rakChecklist.innerHTML += `<label class="checkbox mr-3"><input type="checkbox" class="rakCheck" value="${r}"> ${r}</label>`;
     });
   }
 }
@@ -96,6 +77,9 @@ function simpanData(e) {
   e.preventDefault();
   const rak = document.getElementById("rakSelect").value;
   const inputs = document.querySelectorAll("#barangTable input");
+  const tgl = document.getElementById("tanggalLaporanInput")?.value || new Date().toISOString().slice(0,10);
+
+  if (!tgl) { alert("Pilih tanggal!"); return; }
 
   let data = [];
   inputs.forEach((inp, i) => {
@@ -107,6 +91,12 @@ function simpanData(e) {
   });
 
   localStorage.setItem(rak, JSON.stringify(data));
+
+  // Simpan juga per tanggal
+  let hasilSO = JSON.parse(localStorage.getItem("hasilSO_" + tgl)) || {};
+  hasilSO[rak] = data;
+  localStorage.setItem("hasilSO_" + tgl, JSON.stringify(hasilSO));
+
   alert("Data berhasil disimpan!");
 }
 
@@ -147,10 +137,7 @@ function loadEditBarang() {
   if (!form || !table) return;
 
   table.innerHTML = "";
-  if (!rak) {
-    form.classList.add("is-hidden");
-    return;
-  }
+  if (!rak) { form.classList.add("is-hidden"); return; }
 
   let data = JSON.parse(localStorage.getItem(rak)) || stokAwal[rak] || [];
   data.forEach((item, i) => {
@@ -178,6 +165,13 @@ function simpanEdit(e) {
   stokAwal[rak] = data;
   saveStokAwal();
   localStorage.setItem(rak, JSON.stringify(data));
+
+  // Update hasilSO per tanggal (gunakan hari ini)
+  const tgl = new Date().toISOString().slice(0,10);
+  let hasilSO = JSON.parse(localStorage.getItem("hasilSO_" + tgl)) || {};
+  hasilSO[rak] = data;
+  localStorage.setItem("hasilSO_" + tgl, JSON.stringify(hasilSO));
+
   alert("Perubahan disimpan!");
 }
 
@@ -197,33 +191,14 @@ function tambahItem() {
   saveStokAwal();
   localStorage.setItem(rak, JSON.stringify(data));
 
+  // Update hasilSO per tanggal
+  const tgl = new Date().toISOString().slice(0,10);
+  let hasilSO = JSON.parse(localStorage.getItem("hasilSO_" + tgl)) || {};
+  hasilSO[rak] = data;
+  localStorage.setItem("hasilSO_" + tgl, JSON.stringify(hasilSO));
+
   alert("Item ditambahkan!");
   loadEditBarang();
-}
-
-// ==================== ADJUST ====================
-function adjustSO() {
-  const tgl = document.getElementById("tanggalAdjust")?.value;
-  if (!tgl) { alert("Pilih tanggal!"); return; }
-
-  if (confirm("Adjust hasil SO?")) {
-    let hasil = {};
-    for (let rak in stokAwal) {
-      let data = JSON.parse(localStorage.getItem(rak)) || [];
-      hasil[rak] = data;
-      data.forEach(it => {
-        it.stok = (it.fisik != null ? it.fisik : it.stok);
-      });
-      stokAwal[rak] = data;
-      localStorage.setItem(rak, JSON.stringify(data));
-    }
-
-    saveStokAwal();
-    localStorage.setItem("hasilSO_" + tgl, JSON.stringify(hasil));
-
-    document.getElementById("adjustResult").classList.remove("is-hidden");
-    document.getElementById("hasilLink").href = "laporan.html?tanggal=" + tgl;
-  }
 }
 
 // ==================== LAPORAN ====================
@@ -233,6 +208,7 @@ function tampilkanLaporan() {
   if (!tgl || !cont) return;
 
   cont.innerHTML = "";
+
   let data = JSON.parse(localStorage.getItem("hasilSO_" + tgl)) || {};
   if (Object.keys(data).length === 0) {
     cont.innerHTML = `<div class="notification is-danger">❌ Tidak ada data untuk tanggal ini.</div>`;
