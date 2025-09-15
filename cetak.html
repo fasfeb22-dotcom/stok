@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Cetak Selisih - Stock Opname</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar is-link">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">📦 Stock Opname</a>
+    </div>
+  </nav>
+
+  <!-- Konten -->
+  <section class="section">
+    <div class="container">
+      <h1 class="title">📑 Cetak Selisih</h1>
+
+      <!-- Pilih Rak -->
+      <div class="field">
+        <label class="label">Pilih Rak untuk Dicetak</label>
+        <div class="control" id="rakChecklist">
+          <!-- Rak akan diisi otomatis lewat JS -->
+        </div>
+      </div>
+
+      <!-- Tombol -->
+      <button class="button is-primary mb-3" onclick="previewSelisih()"> Preview Selisih</button>
+
+      <!-- Tabel Hasil -->
+      <table class="table is-bordered is-fullwidth" id="selisihTable">
+        <thead>
+          <tr>
+            <th>Rak</th>
+            <th>Barang</th>
+            <th>Stok Sistem</th>
+            <th>Qty Fisik</th>
+            <th>Selisih</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+  <script>
+    // Ambil data stokAwal dari localStorage
+    let stokAwal = JSON.parse(localStorage.getItem("stokAwal")) || {};
+
+    // Generate checklist rak
+    const checklistContainer = document.getElementById("rakChecklist");
+    checklistContainer.innerHTML = "";
+
+    if (Object.keys(stokAwal).length === 0) {
+      checklistContainer.innerHTML = "<p class='has-text-danger'>❌ Belum ada rak yang ditambahkan.</p>";
+    } else {
+      Object.keys(stokAwal).forEach(rak => {
+        checklistContainer.innerHTML += `
+          <label class="checkbox">
+            <input type="checkbox" value="${rak}" class="rakCheck"> ${rak}
+          </label><br>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
